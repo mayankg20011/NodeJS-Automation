@@ -1,0 +1,265 @@
+<body>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+
+  <script type="text/JavaScript">
+
+let counter = 1;
+function addMessage(message) {
+    var text = document.createTextNode((counter++) + '. ' + message),
+        el = document.createElement('li'),
+        messages = document.getElementById('messages');
+
+    //el.appendChild(text);
+    el.innerHTML = (counter++) + '. ' + message;
+    el.classList.add("list-group-item");
+    messages.appendChild(el); 
+    messages.scrollTop = messages.scrollHeight;
+}
+
+$(document).ready(function () {
+    var socket = io.connect('http://10.72.15.65:8086', {reconnect: true});
+    socket.on('connect', function () {
+        addMessage('connected...');
+    });
+
+    socket.on('message', function (data) {
+        if (data.message) {
+            addMessage(data.message);
+        }
+
+    });
+   $('.bttn').on('click', function (e) {
+          var branch = 'https://cognam-svr/svn/MobileApp/UNIRMobileApp/staging/';
+          // if (localStorage.getItem('branch') && localStorage.getItem('branch') == branch) {
+          //     branch = '';
+          // }
+          counter = 1;
+          localStorage.setItem('branch', branch);
+          var req = {
+              branch: branch,
+              platform: 'Android',
+              server: 'UAT',
+              projectFolder: 'uLinkAndroid',
+              buildType: 'debug',                                         
+              actions: 'ulinkAndroidUAT',
+              message : 'uLink UAT Testing',
+              emails : 'mayankg@cognam.com'
+          };
+
+          document.getElementById('messages').innerHTML = '';
+          socket.emit(e.target.id, req);
+      });
+    $('.btn').on('click', function (e) {
+        var branch = $('#branch').val();
+        // if (localStorage.getItem('branch') && localStorage.getItem('branch') == branch) {
+        //     branch = '';
+        // }
+        counter = 1;
+        localStorage.setItem('branch', branch);
+        var req = {
+            branch: branch,
+            platform: $('#platform').val(),
+            server: $('#server').val(),
+            projectFolder: $('#WLP').val(),
+            buildType: 'debug',                                         
+            actions: $('#actions').val(),
+            message : $('#notes').val(),
+            emails : $('#emails').val()
+        };
+
+        document.getElementById('messages').innerHTML = '';
+        socket.emit(e.target.id, req);
+    });
+   
+});
+
+function setAppName(e) {
+    let projectFolder = e.selectedOptions[0].innerText;
+    console.log(e.value);
+}
+
+// function showNotes() {
+//         var actions = $('#actions').val();
+//         if(actions=='fabric')
+//               notes.show();
+//         else
+//               notes.hide();
+//      }
+
+
+
+
+$(function () {
+    $('#actions').change(function(){
+      var notes = $('#notes');
+      var emails = $('#emails');
+      var actions = $('#actions').val();
+      notes.hide();
+      emails.hide();
+      if(actions=='fabric'){
+          notes.show();
+          emails.show();
+      }
+      else{
+          notes.hide();  
+          emails.hide();
+        }
+      })
+
+    $('.IOS').hide();
+    $("#WLP").val($(".Android:first").val());
+    $("#actions").val($(".tasksB:first").val());
+    $('#platform').change(function () {
+      var platform = $('#platform').val();
+      if(platform == "Android"){
+        $('.IOS').hide();
+        $('.tasksA').show();
+        $('.tasksB').show();
+        $('.Android').show();
+        $("#WLP").val($(".Android:first").val());
+      } else {
+        $('.Android').hide();
+        $('.tasksA').hide();
+        $('.tasksB').show();
+        $('.IOS').show();
+        $("#WLP").val($(".IOS:first").val());
+      }
+    });
+});
+
+</script>
+
+  <div style="padding:20px">
+    <div class="row">
+      <div class="col-sm-1"></div>
+      <div class="col-sm-3">
+        <form action='/form' method='post'>
+          <div class="form-group">
+            <!-- Message input !-->
+            <label class="control-label " for="branch">SVN Repo:</label>
+            <select class="form-control" id="branch" name="branch" onChange="setAppName(this)">
+              <option value="">Select svn repo</option>
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/staging/">Staging</option>      
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/trunk/">TRUNK</option>
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/WLP_Release">WLP Release Branch</option>
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/new_branches/newbillpayment">BillPayment Branch</option>
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/new_branches/trust_payments">Trust Payment</option>
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/new_branches/trustpilot">Trust Pilot</option>   
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/new_branches/Augur">Augur</option>
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/new_branches/refactor_code">Refactor Code</option>
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/new_branches/ACH">ACH</option>
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/new_branches/push_notification">Push Notifications</option>
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/new_branches/UL-527">BillPayment Feedback(UL-527)</option>
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/new_branches/enable_disable_notifi">Notifications Phase 2</option>
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/new_branches/banner">Banner</option>
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/new_branches/demo_app2">Demo2</option>     
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/tag/bantrab_relese_JAN_2020">Bantrab Production</option>
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/new_branches/new_augur_code">Augur New Code</option>
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/new_branches/atlantida">Atlantida</option>
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/new_branches/UL-1078">New Countries Bill PAY</option>
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/new_branches/bantrab">New Bantrab Build</option>
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/new_branches/UL-1624">UL-1624</option>
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/new_branches/UL-2014">UL-2014</option>
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/new_branches/AtlantidaReverseCal">AtlantidaReverseCal</option>
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/new_branches/SecurityBankUp">Security Bank</option>
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/new_branches/reverseCal">Reverse Cal</option>
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/new_branches/bantrab_june">Bantrab_june</option>
+              <option value="https://cognam-svr/svn/MobileApp/UNIRMobileApp/new_branches/refactorFALogging">RefactorFALogging</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <!-- Message input !-->
+            <label class="control-label " for="server">Point to:</label>
+            <select class="form-control" id="server" name="server">
+              <option value="PROD">Production</option>
+              <option value="UAT">UAT</option>
+              <option value="uat2">UAT2</option>
+              <option value="LOCAL">orapitest@62</option>
+              <option value="UNIRTEST">unirtest@64</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <!-- Message input !-->
+            <label class="control-label " for="platform">Platform:</label>
+            <select class="form-control" id="platform" name="platform">
+                  <option value="Android">Android</option>
+                  <option value="IOS">IOS</option>
+            </select>
+          </div>
+
+          <div class="form-group" >
+            <!-- Message input !-->
+            <label class="control-label " for="WLP">App Name:</label>
+            <select class="form-control" id="WLP" name="WLP">
+                    
+                    <option class="Android" value="uLinkAndroid">uLink</option>
+                    <option class="Android" value="smartAndroid">Smart World</option>
+                    <option class="Android" value="InterbankAndroid">Remesa Perú</option>
+                    <option class="Android" value="agenteAndroid">Atlantida Connect</option>
+                    <option class="Android" value="ofbankAndroid">OF Bank</option>
+                    <option class="Android" value="bantrabAndroid">Remesas BT</option>
+                    <option class="Android" value="DemoUniteller">UniTeller Demo</option>
+                    <option class="IOS" value="uLink">uLink</option>
+                    <option class="IOS" value="smart">Smart world</option>
+                    <option class="IOS" value="Interbank">Remesa Perú</option>
+                    <option class="IOS" value="agente">Atlantida Connect</option>
+                    <option class="IOS" value="ofbank">OF Bank</option>
+                    <option class="IOS" value="bantrab">Remesas BT</option>
+                    <option class="IOS" value="mlhuillier">Mlhuillier</option>
+                    
+            </select>
+
+          </div>
+
+          <div class="form-group">
+            <!-- Message input !-->
+            <label class="control-label " for="actions">Actions:</label>
+            <select class="form-control" id="actions" name="actions">
+              <option class="tasksB" id="submit" value="submit">Run Webpack</option>
+              <option class="tasksB" id="prepare" value="prepare">Prepare build</option>
+              <option class="tasksB" id="browser" value="browser">Open app in Browser</option>
+              <option class="tasksB" id="clean" value="clean">Clean build</option>
+              <option class="tasksB" id="increment" value="increment">Increment Config Version</option>
+              <option class="tasksB" id="signed" value="signed">Build Signed Application</option>
+              <option class="tasksB" id="install" value="install">Install App in Mobile</option>
+              <option class="tasksA" id="playstore" value="playstore">Upload to Beta (PlayStore)</option>
+              <option class="tasksB" id="fabric" value="fabric">Upload to Fabric/Firebase</option>
+            </select>
+          </div>
+         
+          <textarea id="notes"  style=" display:none; border:1px solid #666666; height:150px; width:425px; margin:16px 20 20 10px " placeholder="Release Notes"></textarea>
+          <textarea id="emails"  style=" display:none; border:1px solid #666666; height:50px; width:425px; margin:16px 20 20 10px" placeholder="Give emails separated by commas"></textarea>
+         
+
+          <div class="wrapper form-group">
+            <!-- Submit button !-->
+            <button id="okay" class="btn btn-primary" name="okay" type="button">Submit</button>
+          </div>
+
+          <div class="wrapper form-group">
+            <!-- Submit button !-->
+            <button id="okay" class="bttn btn-primary" name="okay" type="button">uLink Android : UAT</button>
+          </div>
+
+
+        </form>
+      </div>
+      <div class="col-sm-7">
+        <div>Logs....</div>
+        <ul id='messages' class="list-group" style="height:630px; top: 50px; overflow:scroll"></ul>
+      </div>
+    </div>
+  </div>
+
+
+</body>

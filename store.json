@@ -1,0 +1,32 @@
+{
+    "uLink": {
+        "KEYSTORE_FILE_PATH": "../../android-sign/Uniteller.jkt",
+        "KEYSTORE_PASSWORD": "UniTeller123",
+        "KEY_ALIAS": "uniteller",
+        "KEY_PASSWORD": "UniTeller123"
+    },
+    "smart": {
+        "KEYSTORE_FILE_PATH": "../../android-sign/Uniteller.jkt",
+        "KEYSTORE_PASSWORD": "UniTeller123",
+        "KEY_ALIAS": "uniteller",
+        "KEY_PASSWORD": "UniTeller123"
+    },
+    "Atlantida": {
+        "KEYSTORE_FILE_PATH": "../../android-sign/Atlantida.jks",
+        "KEYSTORE_PASSWORD": "UniTeller123",
+        "KEY_ALIAS": "uniteller",
+        "KEY_PASSWORD": "UniTeller123"
+    },
+    "interbank": {
+        "KEYSTORE_FILE_PATH": "../../android-sign/interbank.jks",
+        "KEYSTORE_PASSWORD": "UniTeller123",
+        "KEY_ALIAS": "uniteller",
+        "KEY_PASSWORD": "UniTeller123"
+    },
+    "mlhuillier": {
+        "KEYSTORE_FILE_PATH": "../../android-sign/Uniteller.jkt",
+        "KEYSTORE_PASSWORD": "UniTeller123",
+        "KEY_ALIAS": "uniteller",
+        "KEY_PASSWORD": "UniTeller123"
+    }
+}
